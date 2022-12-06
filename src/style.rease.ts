@@ -42,6 +42,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
@@ -56,7 +57,6 @@ $root {
   & {
     width: 100%;
     color: #fff;
-    overflow: hidden;
     padding-top: ${BTNS_SIZE}em;
 
     &.landscape {
