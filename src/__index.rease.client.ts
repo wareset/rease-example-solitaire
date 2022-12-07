@@ -380,6 +380,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
                     CARDS_CLOSED.push(CARDS_OPENED.pop()!)
                     REDO_LIST.push(next)
                   }
+                  REDO_LIST.length = 0
                   next()
                 } else if (CARDS_OPENED.length) {
                   const next = (): void => {
@@ -390,6 +391,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
                     CARDS_OPENED.push(...CARDS_CLOSED.splice(0, CARDS_CLOSED.length).reverse())
                     REDO_LIST.push(next)
                   }
+                  REDO_LIST.length = 0
                   next()
                 } else {
                   return
