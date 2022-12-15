@@ -122,9 +122,6 @@ export default {
   <meta name="theme-color" content="#333333">
 
   <title>Solitaire</title>
-
-  <style>
-  </style>
 </head>
 
 <body>
