@@ -114,7 +114,7 @@ export default {
 
         // return '/* eslint-disable */\n' + code
         return `<!DOCTYPE html>
-<html lang="en" style="touch-action:pan-down;">
+<html lang="en">
 
 <head>
   <meta charset='utf-8'>

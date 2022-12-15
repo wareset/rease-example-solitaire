@@ -37,13 +37,17 @@ html {
   min-height: 100%;
   background-image: radial-gradient(transparent, rgba(0,0,0,0.5));
   background-color: #3d3d3d;
-  background-size: cover / contain;
+  touch-action:pan-down;
+  /* background-size: cover / contain; */
 }
 
 body {
   margin: 0;
   overflow-x: hidden;
   overflow-y: scroll;
+  touch-action: none;
+  overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 body::-webkit-scrollbar {
