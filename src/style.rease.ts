@@ -34,10 +34,10 @@ export const style = css`
 }
 
 html {
-  min-height: 100%;
+  /* min-height: 100%; */
   background-image: radial-gradient(transparent, rgba(0,0,0,0.5));
   background-color: #3d3d3d;
-  touch-action: pan-y;
+  /* touch-action: pan-y; */
   /* overscroll-behavior: contain; */
   /* background-size: cover / contain; */
 }
@@ -48,7 +48,7 @@ body {
   overflow-y: scroll;
   /* touch-action: none; */
   /* overflow-scrolling: touch; */
-  overscroll-behavior: contain;
+  /* overscroll-behavior: contain; */
   /* min-height: 999px; */
 }
 
@@ -74,6 +74,9 @@ $root {
 
 $game {
   &  {
+    min-height: 100vh;
+    touch-action: none;
+
     width: 100%;
     padding: 1%;
     margin: auto;
@@ -93,6 +96,8 @@ $game {
 
 $btns {
   & {
+    touch-action: none;
+
     top: 0;
     left: 0;
     width: 100%;
@@ -192,8 +197,6 @@ $fixer {
 
 $card {
   & {
-    touch-action: none;
-
     width: 100%;
     overflow: visible;
     position: relative;
