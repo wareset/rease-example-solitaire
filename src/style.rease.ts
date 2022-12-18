@@ -37,7 +37,8 @@ html {
   min-height: 100%;
   background-image: radial-gradient(transparent, rgba(0,0,0,0.5));
   background-color: #3d3d3d;
-  touch-action:pan-down;
+  touch-action: pan-y;
+  /* overscroll-behavior: contain; */
   /* background-size: cover / contain; */
 }
 
@@ -45,9 +46,10 @@ body {
   margin: 0;
   overflow-x: hidden;
   overflow-y: scroll;
-  touch-action: none;
-  overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  /* touch-action: none; */
+  /* overflow-scrolling: touch; */
+  overscroll-behavior: contain;
+  /* min-height: 999px; */
 }
 
 body::-webkit-scrollbar {
@@ -190,6 +192,8 @@ $fixer {
 
 $card {
   & {
+    touch-action: none;
+
     width: 100%;
     overflow: visible;
     position: relative;
