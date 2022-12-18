@@ -34,10 +34,10 @@ export const style = css`
 }
 
 html {
-  /* min-height: 100%; */
+  min-height: 100vh;
   background-image: radial-gradient(transparent, rgba(0,0,0,0.5));
   background-color: #3d3d3d;
-  /* touch-action: pan-y; */
+  touch-action: pan-y;
   /* overscroll-behavior: contain; */
   /* background-size: cover / contain; */
 }
@@ -46,6 +46,7 @@ body {
   margin: 0;
   overflow-x: hidden;
   overflow-y: scroll;
+  /* touch-action: pan-y; */
   /* touch-action: none; */
   /* overflow-scrolling: touch; */
   /* overscroll-behavior: contain; */
