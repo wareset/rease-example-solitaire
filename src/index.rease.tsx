@@ -206,10 +206,9 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
     // if (!$isPreWin.get()) {
     if (CARDS_BOXES_PLACES.every((ctx) => !ctx.pub.CARDS.length || ctx.pub.CARDS[0].view)) {
       if (CARDS_BOXES_PLACES.every((ctx) => !ctx.pub.CARDS.length)) {
-        setTimeout((): void => { $isWin.set(true) }, 500)
+        CTO = setTimeout((): void => { $isWin.set(true) }, 1000)
       } else {
-        clearTimeout(CTO)
-        CTO = setTimeout(runAutoEnd, 150)
+        clearTimeout(CTO), CTO = setTimeout(runAutoEnd, 150)
       }
     }
   }
@@ -284,6 +283,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
 
   const $newgame = subject({})
   const new_game = (isShuffle: boolean): void => {
+    clearTimeout(CTO)
     draggedReset()
     isShuffle && shuffle(CARDS)
     UNDO_LIST = [], REDO_LIST = []
