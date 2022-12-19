@@ -52,7 +52,7 @@ const create_box_for_finals = (
   $update: TypeReaseSubject<any>,
   final: boolean
 ): void => {
-  <r-watch r-is={$update!! && last(CARDS)} r-children={(card0) => {
+  <r-watch r-is={$update!! && last(CARDS, 0)} r-children={(card0) => {
     if (card0) {
       const card1 = last(CARDS, 1)
       if (card1) { <div class={style.$card} style={cardBGPosition(card1)}/> }
@@ -68,7 +68,7 @@ function set_card_in_cards_finals(
   let res = false
   let cardLast: TypeCard
   if (!cards_final.length && !card.value ||
-    (cardLast = last(cards_final)!) &&
+    (cardLast = last(cards_final, 0)!) &&
     cardLast.value + 1 === card.value &&
     cardLast.color === card.color &&
     cardLast.suit === card.suit) {
@@ -77,7 +77,7 @@ function set_card_in_cards_finals(
     let lastIsView: boolean
     const next = (): void => {
       cards_final.push(cards.pop()!)
-      if (cards.length) lastIsView = last(cards)!.view
+      if (cards.length) lastIsView = last(cards, 0)!.view
       UNDO_LIST.push(prev)
     }
     const prev = (): void => {
@@ -99,7 +99,7 @@ function set_card_in_cards_places(
   let res = false
   let cardLast: TypeCard
   if (!cards_final.length && card.value === 12 ||
-    (cardLast = last(cards_final)!) &&
+    (cardLast = last(cards_final, 0)!) &&
     cardLast.value === card.value + 1 &&
     cardLast.color !== card.color) {
     res = true
@@ -109,7 +109,7 @@ function set_card_in_cards_places(
       const cardsIdx = cards.indexOf(card)
       if (cardsIdx > -1) {
         cards_final.push(...cards.splice(cardsIdx, cards.length))
-        if (cards.length) lastIsView = last(cards)!.view
+        if (cards.length) lastIsView = last(cards, 0)!.view
       }
       UNDO_LIST.push(prev)
     }
@@ -168,12 +168,86 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
   const $isWin = subject(false)
   const $isInfo = subject(false)
 
+  const getCardFromCardsClosed = (): boolean => {
+    if (CARDS_CLOSED.length) {
+      const next = (): void => {
+        CARDS_OPENED.push(CARDS_CLOSED.pop()!)
+        UNDO_LIST.push(prev)
+      }
+      const prev = (): void => {
+        CARDS_CLOSED.push(CARDS_OPENED.pop()!)
+        REDO_LIST.push(next)
+      }
+      REDO_LIST.length = 0
+      next()
+    } else if (CARDS_OPENED.length) {
+      const next = (): void => {
+        CARDS_CLOSED.push(...CARDS_OPENED.splice(0, CARDS_OPENED.length).reverse())
+        UNDO_LIST.push(prev)
+      }
+      const prev = (): void => {
+        CARDS_OPENED.push(...CARDS_CLOSED.splice(0, CARDS_CLOSED.length).reverse())
+        REDO_LIST.push(next)
+      }
+      REDO_LIST.length = 0
+      next()
+    } else {
+      return false
+    }
+    update()
+    return true
+  }
+
+  let CTO: any
   const $update = subject({})
   const update = (): void => {
     $update.set({})
 
-    if (CARDS_BOXES_PLACES.every((ctx) =>
-      !ctx.pub.CARDS.length || ctx.pub.CARDS[0].view)) { $isWin.set(true) }
+    // if (!$isPreWin.get()) {
+    if (CARDS_BOXES_PLACES.every((ctx) => !ctx.pub.CARDS.length || ctx.pub.CARDS[0].view)) {
+      if (CARDS_BOXES_PLACES.every((ctx) => !ctx.pub.CARDS.length)) {
+        setTimeout((): void => { $isWin.set(true) }, 500)
+      } else {
+        clearTimeout(CTO)
+        CTO = setTimeout(runAutoEnd, 150)
+      }
+    }
+  }
+
+  const runAutoEnd = (): void => {
+    let CARDS: TypeCard[], CARDS_FINALS: TypeCard[]
+    for (let i = 0; i < CARDS_BOXES_PLACES.length; i++) {
+      CARDS = CARDS_BOXES_PLACES[i].pub.CARDS
+
+      if (CARDS.length) {
+        for (let j = 0; j < CARDS_BOXES_FINALS.length; j++) {
+          CARDS_FINALS = CARDS_BOXES_FINALS[j].pub.CARDS
+          if (set_card_in_cards_finals(
+            last(CARDS, 0)!, CARDS, CARDS_FINALS, update, UNDO_LIST, REDO_LIST
+          )) {
+            return
+          }
+
+          if (CARDS_OPENED.length) {
+            if (set_card_in_cards_finals(
+              last(CARDS_OPENED, 0)!, CARDS_OPENED, CARDS_FINALS, update, UNDO_LIST, REDO_LIST
+            )) {
+              return
+            }
+          }
+        }
+      }
+
+      if (CARDS_OPENED.length) {
+        if (set_card_in_cards_places(
+          last(CARDS_OPENED, 0)!, CARDS_OPENED, CARDS, update, UNDO_LIST, REDO_LIST
+        )) {
+          return
+        }
+      }
+    }
+
+    getCardFromCardsClosed()
   }
 
   /*
@@ -338,7 +412,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
                     variants.sort((a, b) => a[0] - b[0])
       
                     let item: typeof variants[number]
-                    const isLast = card === last(cards)
+                    const isLast = card === last(cards, 0)
                     for (let i = variants.length; i-- > 0;) {
                       item = variants[i]
                       if (item[1]) {
@@ -371,7 +445,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
     
               if (id in CARDS_OBJ) {
                 const card = CARDS_OBJ[id], cards = card.cards
-                if (card.view && card === last(cards) && !card.final) {
+                if (card.view && card === last(cards, 0) && !card.final) {
                   for (let l = CARDS_BOXES_FINALS.length, i = 0; i < l; i++) {
                     if (set_card_in_cards_finals(
                       card, cards, CARDS_BOXES_FINALS[i].pub.CARDS, update, UNDO_LIST, REDO_LIST
@@ -384,34 +458,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
 
           >
             <tr>
-              <CardBox r-on-tapend-stop={debounce(() => {
-                if (CARDS_CLOSED.length) {
-                  const next = (): void => {
-                    CARDS_OPENED.push(CARDS_CLOSED.pop()!)
-                    UNDO_LIST.push(prev)
-                  }
-                  const prev = (): void => {
-                    CARDS_CLOSED.push(CARDS_OPENED.pop()!)
-                    REDO_LIST.push(next)
-                  }
-                  REDO_LIST.length = 0
-                  next()
-                } else if (CARDS_OPENED.length) {
-                  const next = (): void => {
-                    CARDS_CLOSED.push(...CARDS_OPENED.splice(0, CARDS_OPENED.length).reverse())
-                    UNDO_LIST.push(prev)
-                  }
-                  const prev = (): void => {
-                    CARDS_OPENED.push(...CARDS_CLOSED.splice(0, CARDS_CLOSED.length).reverse())
-                    REDO_LIST.push(next)
-                  }
-                  REDO_LIST.length = 0
-                  next()
-                } else {
-                  return
-                }
-                update()
-              }, 150, true)}
+              <CardBox r-on-tapend-stop={debounce(getCardFromCardsClosed, 150, true)}
               >
                 <div class={$update!! && CARDS_CLOSED.length > 0 && style.$card}/>
               </CardBox>

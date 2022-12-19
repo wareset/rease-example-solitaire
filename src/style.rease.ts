@@ -264,8 +264,6 @@ $popup {
       display: block;
     }
   }
-
-
 }
 
 $win {
