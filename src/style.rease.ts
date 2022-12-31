@@ -237,7 +237,7 @@ $card_box > $card {
 
 $card > $card {
   & {
-    margin-top: -125%;
+    margin-top: -122.5%;
   }
 }
 

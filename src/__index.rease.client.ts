@@ -215,7 +215,7 @@ createReaseApp(document.body, function(this: TypeReaseContext) {
     if (CARDS_BOXES_PLACES.every((ctx) => !ctx.pub.CARDS.length || ctx.pub.CARDS[0].view)) {
       // if (CARDS_BOXES_PLACES.every((ctx) => !ctx.pub.CARDS.length)) {
       if (CARDS_BOXES_FINALS.reduce((a, v) => a + v.pub.CARDS.length, 0) === CARDS.length) {
-        CTO = setTimeout((): void => { $isWin.set(true) }, 1000)
+        CTO = setTimeout((): void => { $isWin.set(true) }, 250)
       } else {
         clearTimeout(CTO), CTO = setTimeout(runAutoEnd, 150)
       }
