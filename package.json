@@ -17,22 +17,22 @@
     "dev": "rollup -cw & serve ./app"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.5",
+    "@babel/core": "^7.20.12",
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.20.2",
-    "@babel/runtime": "^7.20.6",
-    "@rollup/plugin-commonjs": "^23.0.5",
+    "@babel/runtime": "^7.20.13",
+    "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.1",
     "debounce-safe": "1.0.x",
     "rease": "0.2.x",
-    "rollup": "3.7.4",
+    "rollup": "3.14.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-rease": "0.2.x",
     "serve": "^14.1.2",
     "sucrase": "^3.29.0",
     "svgo": "^3.0.2",
-    "terser": "^5.16.1",
+    "terser": "^5.16.3",
     "typescript": "^4.9.4"
   }
 }
